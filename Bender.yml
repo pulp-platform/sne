@@ -1,0 +1,105 @@
+# ----------------------------------------------------------------------
+# Copyright (C) 2021-2022, ETH Zurich and University of Bologna.
+#
+# Author: Alfio Di Mauro <adimauro@student.ethz.ch>
+# Author: Arpan Suravi Prasad <prasadar@student.ethz.ch>
+#
+# ----------------------------------------------------------------------
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the License); you may
+# not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an AS IS BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+package:
+  name: sne
+  authors:
+    - "Alfio Di Mauro <adimauro@iis.ee.ethz.ch>" # current maintainer
+    - "Arpan Suravi Prasad <prasadar@student.ethz.ch>"
+
+dependencies:
+  apb_node:           { git: "https://github.com/pulp-platform/apb_node.git", version: 0.1.1 }
+  common_cells:       { git: "https://github.com/pulp-platform/common_cells.git", version: 1.21.0 }
+  generic_xbar:       { git: "git@iis-git.ee.ethz.ch:EDC/ips/generic_xbar.git", rev: kraken }
+  register_interface: { git: "https://github.com/pulp-platform/register_interface.git", version: 0.3.0 } 
+  tech_cells_generic: { git: "https://github.com/pulp-platform/tech_cells_generic.git", version: 0.2.4 }
+
+export_include_dirs:
+  - rtl/include
+
+sources:
+  -
+    include_dirs:
+      - rtl/include
+      
+    files:    
+    - rtl/evt_misc_components/sne_pkg.sv
+    - rtl/evt_conf_reg/evt_reggen/generated/bus_clock_reg_pkg.sv
+    - rtl/evt_conf_reg/evt_reggen/generated/engine_clock_reg_pkg.sv
+    - rtl/evt_conf_reg/evt_reggen/generated/system_clock_reg_pkg.sv
+    - rtl/evt_misc_components/sne_evt_stream_pkg.sv
+    - rtl/evt_misc_components/evt_cdc_fifo.sv
+    - rtl/evt_misc_components/evt_data_arbiter.sv
+    - rtl/evt_misc_components/evt_fifo.sv
+    - rtl/evt_misc_components/evt_refresh_insert.sv
+    - rtl/evt_misc_components/evt_spike_filter.sv
+    - rtl/evt_misc_components/evt_stream_dynamic_fork.sv
+    - rtl/evt_misc_components/evt_stream_selector.sv
+    - rtl/evt_misc_components/evt_synchronizer.sv
+    - rtl/evt_misc_components/evt_time_inserter.sv
+    - rtl/evt_misc_components/memory_wrapped_fifo.sv
+    - rtl/evt_misc_components/sne_interface.sv
+    - rtl/evt_crossbar/evt_arbiter.sv
+    - rtl/evt_crossbar/evt_crossbar.sv
+    - rtl/evt_crossbar/evt_crossbar_dst_dev.sv
+    - rtl/evt_crossbar/evt_crossbar_src_dev.sv
+    - rtl/evt_crossbar/evt_fork.sv
+    - rtl/evt_crossbar/evt_synaptic_crossbar.sv
+    - rtl/evt_decoder/evt_decoder.sv
+    - rtl/evt_decoder/evt_engine_router.sv
+    - rtl/evt_decoder/evt_global_router.sv
+    - rtl/evt_dp/evt_dp_group.sv
+    - rtl/evt_dp/evt_engine.sv
+    - rtl/evt_dp/evt_filter.sv
+    - rtl/evt_dp/evt_mapper.sv
+    - rtl/evt_dp/evt_time_unit.sv
+    - rtl/evt_memory_sequencer/evt_counter.sv
+    - rtl/evt_memory_sequencer/evt_floating_kernel.sv
+    - rtl/evt_memory_sequencer/evt_mapper_src.sv
+    - rtl/evt_memory_sequencer/evt_memory_sequencer.sv
+    - rtl/evt_memory_sequencer/evt_memory_subsystem.sv
+    - rtl/evt_memory_sequencer/evt_opt_sequencer.sv
+    - rtl/evt_memory_sequencer/evt_sequencer.sv
+    - rtl/evt_memory_sequencer/evt_status_memory.sv
+    - rtl/evt_memory_sequencer/evt_weight_fifo.sv
+    - rtl/evt_memory_sequencer/evt_kernel_memory.sv
+    - rtl/evt_memory_sequencer/evt_kernel_memory_wrapper.sv
+    - rtl/evt_streamer/evt_streamer.sv
+    - rtl/evt_streamer/evt_streamer_ctrl.sv
+    - rtl/neurons/alif_neuron.sv
+    - rtl/neurons/evt_neuron_dp.sv
+    - rtl/evt_misc_components/sne_sram.sv
+    - rtl/evt_misc_components/evt_sram_wrap.sv
+    - rtl/evt_conf_reg/evt_reggen/evt_reggen_bus_cdc.sv
+    - rtl/evt_conf_reg/evt_reggen/evt_reggen_engine_cdc.sv
+    - rtl/evt_conf_reg/evt_reggen/evt_reggen_system_cdc.sv
+    - rtl/evt_conf_reg/evt_reggen/evt_reggen.sv
+    - rtl/evt_conf_reg/evt_reggen/generated/bus_clock_reg_top.sv
+    - rtl/evt_conf_reg/evt_reggen/generated/engine_clock_reg_top.sv
+    - rtl/evt_conf_reg/evt_reggen/generated/system_clock_reg_top.sv
+    - rtl/sne_complex.sv
+    - rtl/tb/clk_rst_gen.sv
+
+    - target: test
+      files:
+        - rtl/tb/sne_tb_pkg.sv
+        - rtl/tb/tcdm_model.sv
+        - rtl/tb/sne_complex_tb.sv

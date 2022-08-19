@@ -1,0 +1,4 @@
+matplotlib>=3.2.2
+numpy>=1.23.1
+hjson>=3.0.2
+argparse>=1.4.0

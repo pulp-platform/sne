@@ -1,0 +1,217 @@
+/* 
+ * Alfio Di Mauro <adimauro@student.ethz.ch>
+ * Arpan Suravi Prasad <prasadar@student.ethz.ch>
+ *
+ * Copyright (C) 2018-2022 ETH Zurich, University of Bologna
+ * Copyright and related rights are licensed under the Solderpad Hardware
+ * License, Version 0.51 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
+ *
+ *                http://solderpad.org/licenses/SHL-0.51. 
+ *
+ * Unless required by applicable law
+ * or agreed to in writing, software, hardware and materials distributed under
+ * this License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
+{
+    name: "bus_clock",
+    clock_primary: "clk_i",
+    reset_primary: "rst_ni",
+    bus_device: "reg",
+    param_list: [
+      { name:   "STREAM_NUMBER",
+        type:   "int",
+        default:    "2",
+        desc:   "number of streamers",
+        local:  "true"
+      },
+      { name:   "SLICE_NUMBER",
+        type:   "int",
+        default:    "1",
+        desc:   "number of slices",
+        local:  "true"
+      },
+      { name:   "GROUP_NUMBER",
+        type:   "int",
+        default:    "16",
+        desc:   "number of neuron groups",
+        local:  "true"
+      },
+      { name:   "TOTAL_GROUP_NUMBER",
+        type:   "int",
+        default:    "16",
+        desc:   "Total neuron groups",
+        local:  "true"
+      },
+      { name:   "XBAR_SLAVE_NUMBER",
+        type:   "int",
+        default:    "4",
+        local:  "true"
+      },
+      { name:   "XBAR_MASTER_NUMBER",
+        type:   "int",
+        default:    "4",
+        local:  "true"
+      },
+      { name:   "ORACLE_NUMBER",
+        type:   "int",
+        default:    "9",
+        desc:   "Oracle register number",
+        local:  "true"
+      },
+      { name:   "NEURON_NUMBER",
+        type:   "int",
+        default:    "4096",
+        local:  "true"
+      } 
+    ],
+    bus_host: "",
+    regwidth: "32",
+    registers: [
+     {skipto: "0x200"}
+        { multireg:
+          { name: "XBAR_SLAVE_NODE_CFG",
+            desc: "XBAR slave connection configuration register",
+            count: "XBAR_SLAVE_NUMBER",
+            cname: "XBAR_SLAVE_NODE_CFG",
+            swaccess: "rw",
+            hwaccess: "hro",
+            fields: [
+                { bits: "XBAR_MASTER_NUMBER-1:0"
+                }
+            ],
+          }
+        },
+          { name: "cfg_complex_i",
+            desc: "Error acknowledgement",
+            # count: "SLICE_NUMBER",
+            # cname: "cfg_error_i",
+            swaccess: "rw",
+            hwaccess: "hrw",
+            fields: [
+                { bits: "7:0"
+                  name: "ack_err",
+                  desc: "error acknowledge"
+                }
+                { bits: "24:24"
+                  name: "fc_enable",
+                  desc: "enable fc module"
+                }
+                { bits: "15:8"
+                  name: "slice_enable",
+                  desc: "enable slice of fc module"
+                }
+                { bits: "23:16"
+                  name: "select_stream",
+                  desc: "selector to select between fc and streamer"
+                }
+            ],
+          },
+          { name: "cfg_xbar_barrier_i",
+            desc: "XBAR barrier configuration register",
+            # count: "SLICE_NUMBER",
+            # cname: "cfg_error_i",
+            swaccess: "rw",
+            hwaccess: "hrw",
+            fields: [
+                { bits: "31:0"
+                  # name: "synch_en_i",
+                  # desc: "needs synchronization"
+                }
+                # { bits: "31:16"
+                  # name: "fwd_barrier_i",
+                  # desc: "the barrier should be forwarded or not"
+                # }
+            ],
+          },
+          { name: "cfg_xbar_synch_i",
+            desc: "XBAR synch configuration register",
+            # count: "SLICE_NUMBER",
+            # cname: "cfg_error_i",
+            swaccess: "rw",
+            hwaccess: "hrw",
+            fields: [
+                { bits: "31:0"
+                  # name: "synch_en_i",
+                  # desc: "needs synchronization"
+                }
+                # { bits: "31:16"
+                  # name: "fwd_barrier_i",
+                  # desc: "the barrier should be forwarded or not"
+                # }
+            ],
+          },
+          { multireg:
+            { name: "cfg_xbar_stage_0",
+              desc: "XBAR configuration register for stage 0",
+              count: "8",
+              cname: "cfg_xbar_stage_0",
+              swaccess: "rw",
+              hwaccess: "hro",
+              fields: [
+                  { bits: "31:27"
+                    name: "cfg_0",
+                    desc: "0th config"
+                  }
+                  { bits: "26:22"
+                    name: "cfg_1",
+                    desc: "1st config"
+                  }
+                  { bits: "21:17"
+                    name: "cfg_2",
+                    desc: "2nd config"
+                  }
+                  { bits: "16:12"
+                    name: "cfg_3",
+                    desc: "3rd config"
+                  }
+                  { bits: "11:7"
+                    name: "cfg_4",
+                    desc: "4th config"
+                  }
+                  { bits: "6:2"
+                    name: "cfg_5",
+                    desc: "5th config"
+                  }
+              ],
+            }
+        }
+        { multireg:
+            { name: "cfg_xbar_stage_1",
+              desc: "XBAR configuration register for stage 1",
+              count: "6",
+              cname: "cfg_xbar_stage_1",
+              swaccess: "rw",
+              hwaccess: "hro",
+              fields: [
+                  { bits: "31:27"
+                    name: "cfg_0",
+                    desc: "0th config"
+                  }
+                  { bits: "26:22"
+                    name: "cfg_1",
+                    desc: "1st config"
+                  }
+                  { bits: "21:17"
+                    name: "cfg_2",
+                    desc: "2nd config"
+                  }
+                  { bits: "16:12"
+                    name: "cfg_3",
+                    desc: "3rd config"
+                  }
+                  { bits: "11:7"
+                    name: "cfg_4",
+                    desc: "4th config"
+                  }
+                  { bits: "6:2"
+                    name: "cfg_5",
+                    desc: "5th config"
+                  }
+              ],
+            }
+        },
+    ],
+}

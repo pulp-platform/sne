@@ -1,0 +1,257 @@
+/* 
+ * Alfio Di Mauro <adimauro@student.ethz.ch>
+ * Arpan Suravi Prasad <prasadar@student.ethz.ch>
+ *
+ * Copyright (C) 2018-2022 ETH Zurich, University of Bologna
+ * Copyright and related rights are licensed under the Solderpad Hardware
+ * License, Version 0.51 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
+ *
+ *                http://solderpad.org/licenses/SHL-0.51. 
+ *
+ * Unless required by applicable law
+ * or agreed to in writing, software, hardware and materials distributed under
+ * this License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
+{
+    name: "system_clock",
+    clock_primary: "clk_i",
+    reset_primary: "rst_ni",
+    bus_device: "reg",
+    param_list: [
+      { name:   "STREAM_NUMBER",
+        type:   "int",
+        default:    "2",
+        desc:   "number of streamers",
+        local:  "true"
+      },
+      { name:   "SLICE_NUMBER",
+        type:   "int",
+        default:    "1",
+        desc:   "number of slices",
+        local:  "true"
+      },
+      { name:   "GROUP_NUMBER",
+        type:   "int",
+        default:    "16",
+        desc:   "number of neuron groups",
+        local:  "true"
+      },
+      { name:   "TOTAL_GROUP_NUMBER",
+        type:   "int",
+        default:    "16",
+        desc:   "Total neuron groups",
+        local:  "true"
+      },
+      { name:   "XBAR_SLAVE_NUMBER",
+        type:   "int",
+        default:    "4",
+        local:  "true"
+      },
+      { name:   "XBAR_MASTER_NUMBER",
+        type:   "int",
+        default:    "4",
+        local:  "true"
+      },
+      { name:   "ORACLE_NUMBER",
+        type:   "int",
+        default:    "9",
+        desc:   "Oracle register number",
+        local:  "true"
+      },
+      { name:   "NEURON_NUMBER",
+        type:   "int",
+        default:    "4096",
+        local:  "true"
+      } 
+    ],
+    bus_host: "",
+    regwidth: "32",
+    registers: [
+        { multireg:
+          { name: "cfg_main_ctrl_i",
+            desc: "Streamer Configuration",
+            count: "STREAM_NUMBER",
+            cname: "STR_MAIN_CTRL_CFG",
+            swaccess: "rw",
+            hwaccess: "hro",
+            fields: [
+                { bits: "31:0"
+                }
+            ],
+          }
+        },
+        { multireg:
+          { name: "cfg_out_stream_i",
+            desc: "Output Streamer Configuration",
+            count: "STREAM_NUMBER",
+            cname: "STR_OUT_STREAM_CFG",
+            swaccess: "rw",
+            hwaccess: "hro",
+            fields: [
+                { bits: "31:0"
+                }
+            ],
+          }
+        },
+        { multireg:
+          { name: "cfg_tcdm_start_addr_i",
+            desc: "TCDM Start Address Configuration register for Streamer",
+            count: "STREAM_NUMBER",
+            cname: "STR_TCDM_START_ADDR_CFG",
+            swaccess: "rw",
+            hwaccess: "hro",
+            fields: [
+                { bits: "31:0"
+                }
+            ],
+          }
+        },
+        { multireg:
+          { name: "cfg_tcdm_addr_step_i",
+            desc: "TCDM Step Configuration register for Streamer",
+            count: "STREAM_NUMBER",
+            cname: "STR_TCDM_ADDR_STEP_CFG",
+            swaccess: "rw",
+            hwaccess: "hro",
+            fields: [
+                { bits: "31:0"
+                }
+            ],
+          }
+        },
+        { multireg:
+          { name: "cfg_tcdm_end_addr_i",
+            desc: "TCDM End address Configuration register for Streamer",
+            count: "STREAM_NUMBER",
+            cname: "STR_TCDM_END_ADDR_CFG",
+            swaccess: "rw",
+            hwaccess: "hro",
+            fields: [
+                { bits: "31:0"
+                }
+            ],
+          }
+        },
+        { multireg:
+          { name: "cfg_tcdm_tran_size_i",
+            desc: "TCDM Transaction Size Configuration register for Streamer",
+            count: "STREAM_NUMBER",
+            cname: "STR_TCDM_TRAN_SIZE_CFG",
+            swaccess: "rw",
+            hwaccess: "hro",
+            fields: [
+                { bits: "31:0"
+                }
+            ],
+          }
+        },
+        { multireg:
+          { name: "cfg_sram_start_addr_i",
+            desc: "SRAM Start Address Configuration register for Streamer",
+            count: "STREAM_NUMBER",
+            cname: "STR_SRAM_START_ADDR_CFG",
+            swaccess: "rw",
+            hwaccess: "hro",
+            fields: [
+                { bits: "31:0"
+                }
+            ],
+          }
+        },
+        { multireg:
+          { name: "cfg_sram_addr_step_i",
+            desc: "SRAM Step Configuration register for Streamer",
+            count: "STREAM_NUMBER",
+            cname: "STR_SRAM_ADDR_STEP_CFG",
+            swaccess: "rw",
+            hwaccess: "hro",
+            fields: [
+                { bits: "31:0"
+                }
+            ],
+          }
+        },
+        { multireg:
+          { name: "cfg_sram_end_addr_i",
+            desc: "SRAM End address Configuration register for Streamer",
+            count: "STREAM_NUMBER",
+            cname: "STR_SRAM_END_ADDR_CFG",
+            swaccess: "rw",
+            hwaccess: "hro",
+            fields: [
+                { bits: "31:0"
+                }
+            ],
+          }
+        },
+        
+        { multireg:
+          { name: "sta_main_status_o",
+            desc: "Streamer status register",
+            count: "STREAM_NUMBER",
+            cname: "STREAMER_STATUS_REGISTER",
+            swaccess: "ro",
+            hwaccess: "hrw",
+            fields: [
+                { bits: "31:0"
+                }
+            ],
+          }
+        },
+        {   name: "cfg_fc_dimension_i",
+            desc: "Fc layer dimension",
+            swaccess: "rw",
+            hwaccess: "hro",
+            fields: [
+                { bits: "31:24",
+                  name: "y_dim",
+                  desc: "y dimension"
+                },
+                { bits: "23:16",
+                  name: "x_dim",
+                  desc: "x dimension"
+                }
+            ],
+        },
+        {   name: "cfg_fc_offset_i",
+            desc: "Fc layer weight offset",
+            swaccess: "rw",
+            hwaccess: "hro",
+            fields: [
+                { bits: "31:0",
+                  name: "offset",
+                  desc: "offset"
+                }
+            ],
+        },
+        { multireg:
+          { name: "sta_trans_ptr_o",
+            desc: "Streamer transaction status register",
+            count: "STREAM_NUMBER",
+            cname: "STATUS_TRANS_PTR_REGISTER",
+            swaccess: "ro",
+            hwaccess: "hrw",
+            fields: [
+                { bits: "31:0"
+                }
+            ],
+          }
+        },
+        { multireg:
+          { name: "cfg_fc_tran_size_i",
+            desc: "Streamer transaction status register",
+            count: "STREAM_NUMBER",
+            cname: "STATUS_TRANS_PTR_REGISTER",
+            swaccess: "rw",
+            hwaccess: "hrw",
+            fields: [
+                { bits: "31:0"
+                }
+            ],
+          }
+        }
+    ],
+}

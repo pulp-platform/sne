@@ -1,0 +1,17 @@
+/ips_detached
+/test_synth
+/sim
+/golden_model
+/golden_model/sne/__pycache__
+/utils/sne_model/__pycache__
+/utils/IPdb.json
+/tmp
+ToDo.md
+modelsim.ini
+transcript
+lif.odg
+files.yml
+/ips
+synth
+rtl/tech_dep/
+doc/_build

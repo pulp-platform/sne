@@ -1,0 +1,317 @@
+/* 
+ * Alfio Di Mauro <adimauro@student.ethz.ch>
+ * Arpan Suravi Prasad <prasadar@student.ethz.ch>
+ *
+ * Copyright (C) 2018-2022 ETH Zurich, University of Bologna
+ * Copyright and related rights are licensed under the Solderpad Hardware
+ * License, Version 0.51 (the "License"); you may not use this file except in
+ * compliance with the License.  You may obtain a copy of the License at
+ *
+ *                http://solderpad.org/licenses/SHL-0.51. 
+ *
+ * Unless required by applicable law
+ * or agreed to in writing, software, hardware and materials distributed under
+ * this License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
+{
+    name: "engine_clock",
+    clock_primary: "clk_i",
+    reset_primary: "rst_ni",
+    bus_device: "reg",
+    param_list: [
+      { name:   "STREAM_NUMBER",
+        type:   "int",
+        default:    "2",
+        desc:   "number of streamers",
+        local:  "true"
+      },
+      { name:   "SLICE_NUMBER",
+        type:   "int",
+        default:    "8",
+        desc:   "number of slices",
+        local:  "true"
+      },
+      { name:   "GROUP_NUMBER",
+        type:   "int",
+        default:    "16",
+        desc:   "number of neuron groups",
+        local:  "true"
+      },
+      { name:   "TOTAL_GROUP_NUMBER",
+        type:   "int",
+        default:    "128",
+        desc:   "Total neuron groups",
+        local:  "true"
+      },
+      { name:   "XBAR_SLAVE_NUMBER",
+        type:   "int",
+        default:    "4",
+        local:  "true"
+      },
+      { name:   "XBAR_MASTER_NUMBER",
+        type:   "int",
+        default:    "4",
+        local:  "true"
+      },
+      { name:   "ORACLE_NUMBER",
+        type:   "int",
+        default:    "9",
+        desc:   "Oracle register number",
+        local:  "true"
+      },
+      { name:   "NEURON_NUMBER",
+        type:   "int",
+        default:    "8192",
+        local:  "true"
+      } 
+    ],
+    bus_host: "",
+    regwidth: "32",
+    registers: [
+    {skipto: "0x300"}
+        { multireg:
+          { name: "cfg_filter_ubound_i",
+            desc: "Filter upper bound configuration registers for NGs",
+            count: "TOTAL_GROUP_NUMBER",
+            cname: "NG_FILTER_UBOUND_CFG",
+            swaccess: "rw",
+            hwaccess: "hro",
+            fields: [
+                { bits: "31:16"
+                  name: "yid",
+                  desc: "Event filter enable"
+                }
+                { bits: "15:0"
+                  name: "xid",
+                  desc: "Event filter enable"
+                }
+            ],
+          }
+        },
+        { multireg:
+          { name: "cfg_filter_lbound_i",
+            desc: "Filter lower bound configuration registers for NGs",
+            count: "TOTAL_GROUP_NUMBER",
+            cname: "NG_FILTER_LBOUND_CFG",
+            swaccess: "rw",
+            hwaccess: "hro",
+            fields: [
+                { bits: "31:16"
+                  name: "yid",
+                  desc: "Event filter enable"
+                }
+                { bits: "15:0"
+                  name: "xid",
+                  desc: "Event filter enable"
+                }
+            ],
+          }
+        },
+         { multireg:
+          { name: "cfg_filter_main_i",
+            desc: "Filter lower bound configuration registers for NGs",
+            count: "TOTAL_GROUP_NUMBER",
+            cname: "NG_FILTER_MAIN_CFG",
+            swaccess: "rw",
+            hwaccess: "hro",
+            fields: [
+                { bits: "6:4"
+                  name: "y_offset",
+                  desc: "Event filter enable"
+                }
+                { bits: "3:1"
+                  name: "x_offset",
+                  desc: "Event filter enable"
+                }
+                { bits: "0:0"
+                  name: "filter_en",
+                  desc: "Event filter enable"
+                }
+            ],
+          }
+        },
+        { multireg:
+          { name: "cfg_addr_step_i",
+            desc: "Sequencer address step configuration register",
+            count: "SLICE_NUMBER",
+            cname: "SEQ_ADDR_STEP_CFG",
+            swaccess: "rw",
+            hwaccess: "hro",
+            fields: [
+                { bits: "31:0"
+                }
+            ],
+          }
+        },
+        { multireg:
+          { name: "cfg_addr_start_i",
+            desc: "Sequencer start address configuration register",
+            count: "SLICE_NUMBER",
+            cname: "SEQ_ADDR_START_CFG",
+            swaccess: "rw",
+            hwaccess: "hro",
+            fields: [
+                { bits: "31:0"
+                }
+            ],
+          }
+        },
+        { multireg:
+          { name: "cfg_addr_end_i",
+            desc: "Sequencer end address configuration register",
+            count: "SLICE_NUMBER",
+            cname: "SEQ_ADDR_END_CFG",
+            swaccess: "rw",
+            hwaccess: "hro",
+            fields: [
+                { bits: "31:0"
+                }
+            ],
+          }
+        },
+        { name: "cfg_parameter_i",
+            desc: "Neuron parameters",
+            # count: "SLICE_NUMBER",
+            # cname: "cfg_parameter_i",
+            swaccess: "rw",
+            hwaccess: "hro",
+            fields: [
+                { bits: "31:28",
+                  name: "tscale",
+                  desc: "time scale factor"
+                }
+                { bits: "27:24",
+                  name: "davth",
+                  desc: "adaptive threshold"
+                }
+                { bits: "23:16",
+                  name: "tref",
+                  desc: "refractory time period"
+                }
+                { bits: "15:8",
+                  name: "vth",
+                  desc: "threshold voltage"
+                }
+                { bits: "7:0",
+                  name: "vrest",
+                  desc: "rest voltage"
+                }
+            ],
+          },
+         { multireg:
+          { name: "cfg_cid_i",
+            desc: "Neuron parameters",
+            count: "SLICE_NUMBER",
+            cname: "CFG_CHANNEL_ID",
+            swaccess: "rw",
+            hwaccess: "hro",
+            fields: [
+                { bits: "31:24",
+                  name: "cid_15_12",
+                  desc: "channel id for NGs 12-15"
+                }
+                { bits: "23:16",
+                  name: "cid_11_8",
+                  desc: "channel id for NGs 8-11"
+                }
+                { bits: "15:8",
+                  name: "cid_7_4",
+                  desc: "channel id for NGs 4-7"
+                }
+                { bits: "7:0",
+                  name: "cid_3_0",
+                  desc: "channel id for NGs 0-3"
+                }
+            ],
+          }
+        },
+        { multireg:
+          { name: "cfg_slice_i",
+            desc: "Neuron parameters",
+            count: "SLICE_NUMBER",
+            cname: "cfg_slice_i",
+            swaccess: "rw",
+            hwaccess: "hro",
+            fields: [
+                { bits: "30:27",
+                  name: "group_id_high_y",
+                  desc: "higher y index"
+                }
+                { bits: "26:23",
+                  name: "group_id_high_x",
+                  desc: "higher x index"
+                }
+                { bits: "22:19",
+                  name: "group_id_low_y",
+                  desc: "lower y index"
+                }
+                { bits: "18:15",
+                  name: "group_id_low_x",
+                  desc: "lower x index"
+                }
+                { bits: "14:14",
+                  name: "online",
+                  desc: "online reading enable"
+                }
+                { bits: "13:12",
+                  name: "sel",
+                  desc: "kernel memory mode"
+                }
+                { bits: "11:3",
+                  name: "channel",
+                  desc: "number of channels"
+                }
+                { bits: "2:2",
+                  name: "kernel_reset",
+                  desc: "reset the kernel address to write again to 0"
+                }
+                { bits: "1:0",
+                  name: "layer",
+                  desc: "reset the kernel address to write again to 0"
+                }
+            ],
+          }
+        },
+        { multireg:
+          { name: "cfg_error_i",
+            desc: "Error acknowledgement",
+            count: "SLICE_NUMBER",
+            cname: "cfg_error_i",
+            swaccess: "rw",
+            hwaccess: "hrw",
+            fields: [
+                { bits: "0:0",
+                  name: "error",
+                  desc: "acknowledge error"
+                }
+                {
+                  bits : "1:1",
+                  name: "time_insert_enable",
+                  desc: "Insert time to make it contiguous and not redundant"
+                }
+                {
+                  bits : "2:2",
+                  name: "refresh_enable",
+                  desc: "Enable refresh when needed"
+                }
+                {
+                  bits : "3:3",
+                  name: "spike_filter_enable",
+                  desc: "Filter spike according to area of interest"
+                }
+            ],
+          }
+        },
+        { window: 
+          { name: "win1",
+            items: "NEURON_NUMBER",
+            swaccess: "rw",
+            # hwaccess: "hrw",
+            desc: '''   A simple 256 byte window that will be aligned.'''
+          }
+        }
+
+    ],
+}
