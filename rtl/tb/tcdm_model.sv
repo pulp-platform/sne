@@ -108,12 +108,12 @@ module tcdm_model
       assign tcdm_r_valid_o[ii] = tcdm_r_valid [ii];
     end
 
-    always_ff @(posedge clk_i)
-    begin
-      if(randomize_i)
-        for(int i=0; i<MEMORY_SIZE; i++)
-          memory[i] = $random();
-    end
+    // always_ff @(posedge clk_i)
+    // begin
+    //   if(randomize_i)
+    //     for(int i=0; i<MEMORY_SIZE; i++)
+    //       memory[i] = $random();
+    // end
 
   endgenerate
 
@@ -140,6 +140,12 @@ module tcdm_model
 
   always_ff @(posedge clk_i)
   begin : dummy_proc
+
+
+    if(randomize_i)
+      for(int i=0; i<MEMORY_SIZE; i++)
+        memory[i] = $random();
+
     for (int i=0; i<MP; i++) begin
       if ((tcdm_req[i] & enable_i) == 1'b0) begin
         tcdm_r_data_int  [i] <= 'Z;
