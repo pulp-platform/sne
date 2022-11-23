@@ -28,7 +28,6 @@ package:
 dependencies:
   apb_node:           { git: "https://github.com/pulp-platform/apb_node.git", version: 0.1.1 }
   common_cells:       { git: "https://github.com/pulp-platform/common_cells.git", version: 1.21.0 }
-  #generic_xbar:       { git: "git@iis-git.ee.ethz.ch:EDC/ips/generic_xbar.git", rev: kraken }
   register_interface: { git: "https://github.com/pulp-platform/register_interface.git", version: 0.3.0 } 
   tech_cells_generic: { git: "https://github.com/pulp-platform/tech_cells_generic.git", version: 0.2.4 }
 
